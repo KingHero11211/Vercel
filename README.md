@@ -2,11 +2,10 @@
 
 An AI-powered web application designed for early mental health detection, offering personalized support and a suite of interactive wellness tools. Built with ❤️ for better mental wellness.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![Image](https://github.com/user-attachments/assets/bb946441-117b-4cb3-bffc-37bb401afc85)
 
 ---
 
-*(Replace this with a link to your own screenshot or GIF!)*
 
 ## 📜 About The Project
 
@@ -75,6 +74,7 @@ You just need a modern web browser that supports the Web Speech and MediaRecorde
 ### 📂 Project Structure
 
 The project is organized to be simple and easy to navigate.
+
 /
 ├── 📂 assets/
 │ ├── 🔊 audio/ # Contains audio files for the music player
