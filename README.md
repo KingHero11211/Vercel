@@ -39,6 +39,7 @@ This project was built from the ground up using core web technologies, with a fo
 
 *   **Front-End:** `HTML5`, `CSS3` (utilizing Flexbox & Grid for layout), `JavaScript (ES6+)`
 *   **APIs:**
+    *   **Google Gemini API:** For all generative AI-powered analysis and responses.
     *   **Web Speech API:** For voice-to-text input.
     *   **MediaRecorder API:** For recording and saving voice affirmations.
 *   **Storage:** `localStorage` and `sessionStorage` are used to persist user data (tasks, comfort box items, etc.) directly in the browser, ensuring privacy.
@@ -47,23 +48,38 @@ This project was built from the ground up using core web technologies, with a fo
 
 ### 🚀 Getting Started
 
-To get a local copy up and running, follow these simple steps.
-
-#### Prerequisites
-
-You just need a modern web browser that supports the Web Speech and MediaRecorder APIs (e.g., Google Chrome, Firefox).
+To get a local copy up and running, follow these simple steps. This project requires an API key from Google to power its AI features.
 
 #### Installation & Setup
 
-1.  **Clone the repository:**
+1.  **Get a Free Google AI API Key:**
+    *   Navigate to [Google AI Studio](https://aistudio.google.com/).
+    *   Sign in and click **"Get API key"** > **"Create API key in new project"**.
+    *   Copy the generated key. You'll need it in a moment.
+
+2.  **Clone the repository:**
     ```sh
-    git clone https://github.com/your-username/your-repo-name.git
+    git clone https://github.com/KingHero11211/Vercel.git
     ```
-2.  **Navigate to the project directory:**
+3.  **Navigate to the project directory:**
     ```sh
-    cd your-repo-name
+    cd Vercel
     ```
-3.  **Run the application:**
+4.  **Set Up Your API Key:**
+    *   In the project folder, you will find a file named `config.example.js`.
+    *   **Rename** this file to `config.js`.
+    *   Open the new `config.js` file and **paste your API key** into the placeholder string.
+
+    ```javascript
+    // Before (in config.example.js)
+    const API_KEY = "PASTE_YOUR_GOOGLE_AI_API_KEY_HERE";
+
+    // After (in your new config.js)
+    const API_KEY = "AIzaSy...your...actual...key...";
+    ```
+    > The `config.js` file is listed in `.gitignore` to ensure your secret key is never committed to GitHub.
+
+5.  **Run the application:**
     *   **The Easy Way (Recommended):** If you use Visual Studio Code, install the **[Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer)** extension. Right-click on `HTML.html` and select "Open with Live Server".
     *   **The Simple Way:** You can also just open the `HTML.html` file directly in your web browser.
     
@@ -71,18 +87,42 @@ You just need a modern web browser that supports the Web Speech and MediaRecorde
 
 ---
 
+### ☁️ Deployment on Vercel
+
+You can easily deploy this project to Vercel. To make the AI work on the live site, you need to set the API key as a secure environment variable.
+
+1.  Push your project to GitHub (ensure `config.js` is in your `.gitignore`).
+2.  Import the project into Vercel from your GitHub repository.
+3.  In the Vercel project dashboard, go to **Settings -> Environment Variables**.
+4.  Add a new variable:
+    *   **Name:** `GOOGLE_API_KEY`
+    *   **Value:** Paste your actual API key here.
+5.  Go to **Settings -> Build & Development Settings**.
+6.  Find the **Build Command** field, toggle it ON, and enter the following command:
+    ```bash
+    echo "const API_KEY = '$GOOGLE_API_KEY';" > config.js
+    ```
+7.  **Redeploy** your project. The build command will create the `config.js` file on Vercel's server before your site goes live, allowing the AI to function correctly.
+
+---
+
 ### 📂 Project Structure
 
-The project is organized to be simple and easy to navigate.
+The project is organized to be simple and easy to navigate, with API keys handled securely.
 
+```
 /
 ├── 📂 assets/
-│ ├── 🔊 audio/ # Contains audio files for the music player
-│ └── 🖼️ images/ # Contains images for album art and UI icons
-├── 📄 HTML.html # The main structure and content of the application
-├── 🎨 CSS.css # All styling, animations, and layout rules
-├── ⚙️ JAVA.js # All application logic, state management, and interactivity
-└── 📖 README.md # You are here!
+│   ├── 🔊 audio/         # Contains audio files for the music player
+│   └── 🖼️ images/       # Contains images for album art and UI icons
+├── 📄 .gitignore         # Tells Git to ignore config.js
+├── 📄 config.example.js  # A template for the API key configuration
+├── 📄 HTML.html           # The main structure and content
+├── 🎨 CSS.css             # All styling, animations, and layout
+├── ⚙️ JAVA.js             # All application logic and interactivity
+└── 📖 README.md           # You are here!
+```
+
 ---
 
 ### 🤝 Contributing
@@ -107,9 +147,9 @@ Distributed under the MIT License.
 
 ### 📬 Contact
 
-Aaryan  - mail to: masteraaryan01@gmail.com
+Aaryan  - [masteraaryan01@gmail.com](mailto:masteraaryan01@gmail.com)
 
-Project Link: (https://github.com/KingHero11211/Vercel.git)
+Project Link: [https://github.com/KingHero11211/Vercel.git](https://github.com/KingHero11211/Vercel.git)
 
 ### 🙏 Acknowledgments
 
