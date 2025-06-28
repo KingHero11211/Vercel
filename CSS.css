@@ -323,3 +323,30 @@ textarea { width: 100%; padding: 1rem; border-radius: 8px; border: 1px solid var
 /* Affirmation Recorder Styles */
 #affirmation-status { text-align: center; color: var(--text-secondary); margin-top: 0.5rem; font-size: 0.9rem; min-height: 1.2em; }
 /* --- END: COMFORT BOX NEW FEATURES --- */
+
+/* --- START: COMFORT BOX BUTTON FIXES --- */
+
+/* Base style for the 'Record a Message' button */
+#page-comfort-box .comfort-box-btn.record-btn {
+    display: inline-flex;       /* Use flexbox for alignment */
+    align-items: center;        /* Vertically center content */
+    justify-content: center;    /* Horizontally center content */
+    gap: 0.75rem;               /* Space between icon and text */
+}
+
+/* Create the red dot icon */
+#page-comfort-box .comfort-box-btn.record-btn::before {
+    content: '';                /* Required for pseudo-elements */
+    display: block;
+    width: 10px;                /* Icon size */
+    height: 10px;               /* Icon size */
+    background-color: #e53e3e;  /* Icon color (matches shred button) */
+    border-radius: 50%;         /* Makes it a circle */
+}
+
+/* When recording, change the icon color to match the button's animation */
+#page-comfort-box .comfort-box-btn.record-btn.recording::before {
+    background-color: white;
+}
+
+/* --- END: COMFORT BOX BUTTON FIXES --- */
