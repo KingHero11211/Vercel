@@ -27,65 +27,200 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
     
-    // --- AI ANALYSIS MODULE ---
-    const analysisModule = () => {
-        const backendStatus = document.getElementById('backend-status');
-        const analyzeBtn = document.getElementById('analyze-btn');
-        const recordBtn = document.getElementById('record-btn');
-        const userInput = document.getElementById('user-input');
-        const voiceStatus = document.getElementById('voice-status');
-        const textControls = document.getElementById('text-controls');
-        const voiceControls = document.getElementById('voice-controls');
-        const inputMethodSelector = document.getElementById('input-method-selector');
-        const analysisResultContainer = document.getElementById('analysis-result-container');
-        const toggleRelationBtn = document.getElementById('toggle-relation-mode');
-        const relationSelectContainer = document.getElementById('relation-select-container');
-        const relationSelect = document.getElementById('relation-select');
-        const languageSelect = document.getElementById('language-select');
-        
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        let recognition;
-        let isRecording = false;
-        let analysisHistory = [];
-        let selectedRelation = '';
-        let currentLanguage = 'en-US';
+    // --- AI ANALYSIS MODULE (GEMINI POWERED - AUTOMATIC KEY) ---
+    // --- AI ANALYSIS MODULE (GEMINI POWERED - DEFINITIVE FIX) ---
+const analysisModule = () => {
+    // DOM Elements
+    const backendStatus = document.getElementById('backend-status');
+    const analyzeBtn = document.getElementById('analyze-btn');
+    const recordBtn = document.getElementById('record-btn');
+    const userInput = document.getElementById('user-input');
+    const voiceStatus = document.getElementById('voice-status');
+    const textControls = document.getElementById('text-controls');
+    const voiceControls = document.getElementById('voice-controls');
+    const inputMethodSelector = document.getElementById('input-method-selector');
+    const analysisResultContainer = document.getElementById('analysis-result-container');
+    const toggleRelationBtn = document.getElementById('toggle-relation-mode');
+    const relationSelectContainer = document.getElementById('relation-select-container');
+    const relationSelect = document.getElementById('relation-select');
+    const languageSelect = document.getElementById('language-select');
 
-        const languagePacks = {
-            'en-US': { ui: { placeholder: "Type a journal entry...", voiceStatus: "Click to start speaking.", analysisTitle: "🧠 Analysis of Your Feelings", inputHeader: "Your Input", emotionLabel: "Emotion", riskLabel: "Risk Level", insightLabel: "Insight", suggestionLabel: "Suggestion" }, analysis: { keywords: { failure: /\b(fail|failed|exam|bad grade|disappointed)\b/i, crisis: /\b(kill myself|end it|hopeless|worthless|no reason to live)\b/i, anxiety: /\b(anxious|worried|stressed|overwhelmed|nervous|panic)\b/i, sadness: /\b(sad|crying|depressed|lonely|empty|heartbroken|lost someone)\b/i, happiness: /\b(happy|great|joyful|excited|amazing|wonderful)\b/i }, responses: { failure: { emotion: 'Disappointed', risk_level: 'Medium', reason: "It sounds like you're feeling down about a recent outcome.", suggestion: "Setbacks like this are tough, but they don't define you. It's just one step on a long journey." }, crisis: { emotion: 'Distressed', risk_level: 'High', reason: 'The words you used suggest you are in a lot of pain and may be in crisis.', suggestion: "Your safety is most important. It sounds like you are going through immense pain, and it's crucial to talk to someone who can help immediately. Please use the crisis support numbers in the sidebar. You are not alone." }, anxiety: { emotion: 'Anxious', risk_level: 'Medium', reason: 'It sounds like you have a lot on your mind and are feeling overwhelmed.', suggestion: "When your thoughts are racing, it can help to ground yourself. Try to focus on the feeling of your feet on the floor, and take one slow, deep breath." }, sadness: { emotion: 'Sad', risk_level: 'Medium', reason: 'It sounds like you are feeling heavy-hearted and sad.', suggestion: "It is completely okay to feel this way. Your feelings are valid. Be gentle with yourself. Maybe listen to a comforting song." }, happiness: { emotion: 'Happy', risk_level: 'Low', reason: 'It sounds like something wonderful has happened!', suggestion: "That's fantastic to hear! Embrace this positive energy. Take a moment to really soak in this feeling." }, neutral: { emotion: 'Neutral', risk_level: 'Low', reason: 'It sounds like things are calm at the moment.', suggestion: "This is a good time to relax or do something you enjoy." } }, relationVoices: { father: "As a father:", mother: "Sweetheart, your mother is here to tell you:", sister: "Hey, from your sister:", brother: "Bro, listen up:", best_friend: "As your bestie, I've got your back! Here's my take:", teacher: "Let's look at this from a learning perspective:", therapist: "Thank you for sharing. Let's gently explore this:", stranger: "Though I'm a stranger, I hear you, and I want to say:" }, stories: { failure: [ { person: "J.K. Rowling", story: "She was rejected by 12 publishers before Harry Potter was accepted." } ], sadness: [ { person: "Dwayne 'The Rock' Johnson", story: "He has openly spoken about his battles with depression, proving vulnerability is a strength." } ], anxiety: [ { person: "Oprah Winfrey", story: "She overcame a traumatic childhood and intense anxiety using mindfulness and gratitude." } ] } } },
-            'es-ES': { ui: { placeholder: "Escribe en tu diario...", voiceStatus: "Haz clic para empezar a hablar.", analysisTitle: "🧠 Análisis de Tus Sentimientos", inputHeader: "Tu Entrada", emotionLabel: "Emoción", riskLabel: "Nivel de Riesgo", insightLabel: "Perspectiva", suggestionLabel: "Sugerencia" }, analysis: { keywords: { failure: /\b(fallé|fracaso|examen|mala nota|decepcionado)\b/i, crisis: /\b(matarme|acabar con todo|sin esperanza|inútil|no hay razón para vivir)\b/i, anxiety: /\b(ansioso|preocupado|estresado|abrumado|nervioso|pánico)\b/i, sadness: /\b(triste|llorando|deprimido|solo|vacío|corazón roto)\b/i, happiness: /\b(feliz|genial|alegre|emocionado|increíble|maravilloso)\b/i }, responses: { failure: { emotion: 'Decepcionado', risk_level: 'Medium', reason: "Parece que te sientes mal por un resultado reciente.", suggestion: "Los contratiempos como este son duros, pero no te definen. Es solo un paso en un largo viaje." }, crisis: { emotion: 'Angustiado', risk_level: 'High', reason: 'Las palabras que usaste sugieren que estás sufriendo mucho.', suggestion: "Tu seguridad es lo más importante. Por favor, usa los números de apoyo en crisis de la barra lateral. No estás solo." }, anxiety: { emotion: 'Ansioso', risk_level: 'Medium', reason: 'Parece que tienes mucho en mente y te sientes abrumado.', suggestion: "Cuando tus pensamientos van a toda velocidad, puede ayudar anclarte al presente. Intenta concentrarte en tus pies en el suelo y respira hondo." }, happiness: { emotion: 'Feliz', risk_level: 'Low', reason: '¡Parece que ha ocurrido algo maravilloso!', suggestion: "¡Es fantástico! Aprovecha esta energía positiva." }, neutral: { emotion: 'Neutral', risk_level: 'Low', reason: 'Parece que las cosas están tranquilas.', suggestion: "Es un buen momento para relajarse o hacer algo que disfrutes." } }, relationVoices: { father: "Como padre:", mother: "Cariño, tu madre te dice:", sister: "Oye, de tu hermana:", best_friend: "Como tu mejor amigo:", teacher: "Desde una perspectiva de aprendizaje:", therapist: "Gracias por compartir. Exploremos esto:", stranger: "Aunque soy un extraño, te escucho:" }, stories: { failure: [ { person: "J.K. Rowling", story: "Fue rechazada por 12 editoriales antes de que Harry Potter fuera aceptado." } ], sadness: [ { person: "Dwayne 'The Rock' Johnson", story: "Ha hablado abiertamente de sus batallas contra la depresión, demostrando que la vulnerabilidad es una fortaleza." } ] } } },
-            'hi-IN': { ui: { placeholder: "अपनी कोई बात लिखें...", voiceStatus: "बोलने के लिए क्लिक करें।", analysisTitle: "🧠 आपकी भावनाओं का विश्लेषण", inputHeader: "आपका इनपुट", emotionLabel: "भावना", riskLabel: "जोखिम स्तर", insightLabel: "अंतर्दृष्टि", suggestionLabel: "सुझाव" }, analysis: { keywords: { failure: /\b(असफल|विफल|परीक्षा|खराब ग्रेड|निराश)\b/i, crisis: /\b(आत्महत्या|जान दे दूँ|निराश|बेकार)\b/i, anxiety: /\b(चिंतित|घबराहट|तनावग्रस्त|परेशान)\b/i, sadness: /\b(दुखी|रो रहा|उदास|अकेला)\b/i, happiness: /\b(खुश|बहुत अच्छा|आनंदित|उत्साहित)\b/i }, responses: { failure: { emotion: 'निराश', risk_level: 'Medium', reason: "लगता है आप किसी हालिया नतीजे से निराश हैं।", suggestion: "ऐसी असफलताएं कठिन होती हैं, पर वे आपको परिभाषित नहीं करतीं। यह एक लंबी यात्रा का एक कदम है।" }, crisis: { emotion: 'संकट में', risk_level: 'High', reason: 'आपके शब्द बताते हैं कि आप बहुत दर्द में हैं।', suggestion: "आपकी सुरक्षा सबसे महत्वपूर्ण है। कृपया साइडबार में दिए गए संकट सहायता नंबरों का उपयोग करें। आप अकेले नहीं हैं।" }, anxiety: { emotion: 'चिंतित', risk_level: 'Medium', reason: 'लगता है आपके मन में बहुत कुछ चल रहा है।', suggestion: "जब विचार दौड़ें, तो अपने पैरों को फर्श पर महसूस करने की कोशिश करें और एक गहरी सांस लें।" }, happiness: { emotion: 'प्रसन्न', risk_level: 'Low', reason: 'लगता है कुछ بہت اچھا हुआ ہے!', suggestion: "यह शानदार है! इस सकारात्मक ऊर्जा का आनंद लें।" }, neutral: { emotion: 'तटस्थ', risk_level: 'Low', reason: 'अभी सब कुछ शांत लग रहा है।', suggestion: "यह आराम करने या कुछ मनोरंजक करने का अच्छा समय है।" } }, relationVoices: { father: "एक पिता के नाते:", mother: "बेटा/बेटी, तुम्हारी माँ कहती है:", sister: "तुम्हारी बहन की तरफ से:", best_friend: "तुम्हारे सबसे अच्छे दोस्त के नाते:", teacher: "इसे सीखने की दृष्टि से देखें:", therapist: "साझा करने के लिए धन्यवाद:", stranger: "मैं एक अजनबी हूँ, पर मैं सुन रहा हूँ:" }, stories: { failure: [ { person: "जे.के. Rowling", story: "हैरी पॉटर स्वीकार होने से पहले उन्हें 12 प्रकाशकों ने अस्वीकार कर दिया था।" } ], sadness: [ { person: "ड्वेन 'द रॉक' जॉनसन", story: "उन्होंने अवसाद के साथ अपनी लड़ाई के बारे में खुलकर बात की है, यह साबित करते हुए कि भेद्यता एक ताकत है।" } ] } } },
-            'ur-PK': { ui: { placeholder: "اپنی کوئی بات لکھیں...", voiceStatus: "بولنے کے لیے کلک کریں۔", analysisTitle: "🧠 آپ کے جذبات کا تجزیہ", inputHeader: "آپ کا ان پٹ", emotionLabel: "جذبہ", riskLabel: "خطرے کی سطح", insightLabel: "بصیرت", suggestionLabel: "تجویز" }, analysis: { keywords: { failure: /\b(ناکام|امتحان|برا گریڈ|مایوس)\b/i, crisis: /\b(خودکشی|ختم کر دوں|ناامید|بیکار)\b/i, anxiety: /\b(پریشان|فکرمند|ذہنی دباؤ|گھبراہٹ)\b/i, sadness: /\b(اداس|رو رہا|غمگین|تنہا)\b/i, happiness: /\b(خوش|بہت اچھا|پرجوش|حیرت انگیز)\b/i }, responses: { failure: { emotion: 'مایوس', risk_level: 'Medium', reason: "ایسا لگتا ہے کہ آپ حالیہ نتیجے سے مایوس ہیں۔", suggestion: "ایسی ناکامیاں مشکل ہوتی ہیں, لیکن یہ آپ کی تعریف نہیں کرتیں۔ یہ ایک لمبے سفر کا صرف ایک قدم ہے۔" }, crisis: { emotion: 'شدید پریشانی', risk_level: 'High', reason: 'آپ کے الفاظ بتاتے ہیں کہ آپ شدید تکلیف میں ہیں۔', suggestion: "آپ کی حفاظت سب سے اہم ہے۔ براہ کرم سائڈبار میں کرائسس سپورٹ نمبرز کا استعمال کریں۔ آپ اکیلے نہیں ہیں۔" }, anxiety: { emotion: 'پریشان', risk_level: 'Medium', reason: 'ایسا لگتا ہے کہ آپ کے ذہن میں بہت کچھ ہے۔', suggestion: "جب خیالات دوڑیں تو اپنے پیروں کو فرش پر محسوس کرنے کی کوشش کریں اور گہری سانس لیں۔" }, happiness: { emotion: 'خوش', risk_level: 'Low', reason: 'ایسا لگتا ہے کہ کچھ شاندار ہوا ہے!', suggestion: "یہ بہت اچھا ہے! اس مثبت توانائی سے لطف اٹھائیں۔" }, neutral: { emotion: 'غیر جانبدار', risk_level: 'Low', reason: 'ابھی حالات پرسکون لگ رہے ہیں۔', suggestion: "یہ آرام کرنے یا کچھ تفریحی करने کا اچھا وقت ہے۔" } }, relationVoices: { father: "ایک باپ کے طور پر:", mother: "بیٹا/بیٹی, تمہاری ماں کہتی ہے:", sister: "تمہاری بہن کی طرف سے:", best_friend: "تمہارے بہترین دوست کے طور پر:", teacher: "آئیے اسے سیکھنے کے نقطہ نظر سے دیکھتے ہیں:", therapist: "شیئر کرنے کا شکریہ:", stranger: "اگرچہ میں اجنبی ہوں, میں سن رہا ہوں:" }, stories: { failure: [ { person: "جے کے رولنگ", story: "ہیری پوٹر قبول ہونے سے پہلے انہیں 12 پبلشرز نے مسترد کر دیا تھا۔" } ], sadness: [ { person: "ڈوین 'دی راک' جانسن", story: "انہوں نے ڈپریشن کے ساتھ اپنی جنگ کے بارے میں کھل کر بات کی ہے, یہ ثابت کرتے ہوئے کہ کمزوری ایک طاقت ہے۔" } ] } } }
-        };
-        const updateLanguage = (langCode) => { currentLanguage = langCode; const uiPack = languagePacks[langCode].ui; userInput.placeholder = uiPack.placeholder; voiceStatus.textContent = uiPack.voiceStatus; if (recognition) { recognition.lang = langCode; } };
-        const mockAnalyzeUserInput = (text, relation, language) => { const langPack = languagePacks[language].analysis; const { keywords, responses, relationVoices, stories } = langPack; const lowerText = text.toLowerCase(); let storyCategory = null; let response = { ...responses.neutral }; if (keywords.failure.test(lowerText)) { storyCategory = 'failure'; response = { ...responses.failure }; } else if (keywords.crisis.test(lowerText)) { response = { ...responses.crisis }; } else if (keywords.anxiety.test(lowerText)) { storyCategory = 'anxiety'; response = { ...responses.anxiety }; } else if (keywords.sadness.test(lowerText)) { storyCategory = 'sadness'; response = { ...responses.sadness }; } else if (keywords.happiness.test(lowerText)) { response = { ...responses.happiness }; } if (relation && relationVoices[relation]) { response.suggestion = `<strong>${relationVoices[relation]}</strong> ${response.suggestion}`; } if (storyCategory && stories[storyCategory]) { const storyOptions = stories[storyCategory]; const story = storyOptions[Math.floor(Math.random() * storyOptions.length)]; const storyTitle = `💡 An Inspiring Story: ${story.person}`; const storyHTML = `<div class="inspirational-story"><h4>${storyTitle}</h4><p>${story.story}</p></div>`; response.suggestion += storyHTML; } return response; };
-        const displayAnalysisResult = (result) => { const { llm_result } = result; const riskClass = `risk-${llm_result.risk_level.toLowerCase()}`; const riskEmojis = { "Low": "🟢", "Medium": "🟡", "High": "🔴" }; const uiPack = languagePacks[currentLanguage].ui; analysisResultContainer.innerHTML = `<h3>${uiPack.analysisTitle}</h3><div class="emotion-card ${riskClass}"><h4>${uiPack.inputHeader}</h4><p>"${result.input_text}"</p><div class="result-details"><div>🎭 <strong>${uiPack.emotionLabel}:</strong> ${llm_result.emotion}</div><div>${riskEmojis[llm_result.risk_level]} <strong>${uiPack.riskLabel}:</strong> ${llm_result.risk_level}</div></div><p class="insight">💡 <strong>${uiPack.insightLabel}:</strong> ${llm_result.reason}</p><div class="suggestion"><p>🤖 <strong>${uiPack.suggestionLabel}:</strong> ${llm_result.suggestion}</p></div></div>`; };
-        const triggerAnalysis = (text) => { if (!text.trim()) return; analysisResultContainer.innerHTML = `<h3>🧠 Finding helpful insights...</h3>`; const llm_result = mockAnalyzeUserInput(text, selectedRelation, currentLanguage); const result = { input_text: text, method: 'Local AI', llm_result: llm_result }; setTimeout(() => { analysisHistory.push({ timestamp: new Date(), ...result }); displayAnalysisResult(result); }, 500); };
-        const init = () => {
-            backendStatus.textContent = '✅ AI: Demo Mode';
-            backendStatus.classList.replace('status-warning', 'status-online');
-            toggleRelationBtn.addEventListener('click', () => { relationSelectContainer.style.display = relationSelectContainer.style.display === 'block' ? 'none' : 'block'; });
-            relationSelect.addEventListener('change', (e) => { selectedRelation = e.target.value; });
-            analyzeBtn.addEventListener('click', () => triggerAnalysis(userInput.value));
-            inputMethodSelector.addEventListener('change', (e) => { textControls.style.display = e.target.value === 'text' ? 'block' : 'none'; voiceControls.style.display = e.target.value === 'voice' ? 'block' : 'none'; if (isRecording && e.target.value === 'text') { recognition.stop(); } });
-            languageSelect.addEventListener('change', (e) => updateLanguage(e.target.value));
-            if (SpeechRecognition) {
-                recognition = new SpeechRecognition();
-                recognition.continuous = true;
-                recognition.interimResults = true;
-                updateLanguage(currentLanguage);
-                recordBtn.addEventListener('click', () => { if (isRecording) { recognition.stop(); } else { userInput.value = ''; recognition.start(); } });
-                recognition.onstart = () => { isRecording = true; recordBtn.textContent = '🛑 Stop Recording'; recordBtn.classList.add('recording'); voiceStatus.textContent = 'Listening...'; };
-                recognition.onend = () => { isRecording = false; recordBtn.textContent = '🎙 Start Recording'; recordBtn.classList.remove('recording'); if (userInput.value.trim()) { voiceStatus.textContent = 'Processing...'; triggerAnalysis(userInput.value); setTimeout(() => { updateLanguage(currentLanguage); }, 2000); } else { voiceStatus.textContent = languagePacks[currentLanguage].ui.voiceStatus; } };
-                recognition.onerror = (event) => { console.error('Speech Recognition Error:', event.error); voiceStatus.textContent = `Error: ${event.error}`; isRecording = false; recordBtn.textContent = '🎙 Start Recording'; recordBtn.classList.remove('recording'); };
-                recognition.onresult = (event) => { let finalTranscript = ''; for (let i = event.resultIndex; i < event.results.length; ++i) { finalTranscript += event.results[i][0].transcript; } userInput.value = finalTranscript; };
-            } else {
-                document.querySelector('label:has(input[value="voice"])').style.display = 'none';
-                voiceControls.style.display = 'none';
-                languageSelect.parentElement.style.display = 'none';
+    // State
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let recognition;
+    let isRecording = false;
+    let selectedRelation = '';
+    let currentLanguage = 'en-US';
+    const apiKey = typeof API_KEY !== 'undefined' ? API_KEY : '';
+
+    // --- Core AI Function ---
+    const getAiAnalysis = async (text, relation, language) => {
+        if (!apiKey || apiKey === "PASTE_YOUR_GOOGLE_AI_API_KEY_HERE") {
+            return {
+                emotion: 'Configuration Error',
+                risk_level: 'High',
+                reason: 'The API_KEY is missing or has not been set.',
+                suggestion: 'Please create a `config.js` file, get a free API key from Google AI Studio, and add it to the file. The line should look like: `const API_KEY = "YourActualKeyGoesHere";`'
+            };
+        }
+
+        // --- THIS IS THE DEFINITIVE, CORRECT URL AND MODEL ---
+        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
+
+        const prompt = `
+            Analyze the following user-provided text from a mental health perspective.
+            The user's input is in ${language}. Please respond in ${language}.
+
+            User's selected persona for you to respond as: "${relation || 'Default AI'}".
+            If a persona is selected (e.g., "Father", "Therapist"), tailor your suggestion to sound like that persona.
+            
+            User Text: "${text}"
+
+            Based on the text, provide a JSON object with the following structure and nothing else. Do not include any explanatory text or markdown formatting like \`\`\`json ... \`\`\`.
+            Your entire response should be ONLY the raw JSON object.
+
+            {
+              "emotion": "A single, primary emotion detected (e.g., 'Anxious', 'Sad', 'Hopeful', 'Confused').",
+              "risk_level": "A risk level ('Low', 'Medium', 'High'). 'High' should be reserved for clear indications of self-harm, crisis, or severe distress.",
+              "reason": "A brief, one-sentence explanation for why you chose that emotion and risk level, written in a gentle tone.",
+              "suggestion": "A compassionate, actionable suggestion. If a persona was selected, write this from that persona's point of view. For 'High' risk, the suggestion MUST strongly and directly advise using the crisis resources."
             }
-        };
-        init();
+        `;
+        
+        try {
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: prompt }] }],
+                    generationConfig: {
+                        // Crucially, the response MUST be JSON.
+                        responseMimeType: "application/json",
+                        temperature: 0.7,
+                        topK: 1,
+                        topP: 1,
+                        maxOutputTokens: 2048,
+                    },
+                }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error("API Error:", errorData);
+                throw new Error(`API request failed: ${errorData.error?.message || response.statusText}`);
+            }
+            
+            // The API now directly returns a JSON object when requested, no need to parse text.
+            const data = await response.json();
+            return data.candidates[0].content.parts[0].text;
+
+        } catch (error) {
+            console.error("Error during AI analysis:", error);
+            // Check for a specific API error that's common for new users
+            if (error.message.includes("API key not valid")) {
+                 return {
+                    emotion: 'Error', risk_level: 'High', reason: 'The provided API Key is not valid.',
+                    suggestion: 'Please double-check the API Key in your `config.js` file. Make sure it was copied correctly from Google AI Studio and has no extra spaces or characters.'
+                };
+            }
+            if (error.message.includes("permission")) {
+                 return {
+                    emotion: 'Error', risk_level: 'High', reason: 'The API Key is valid, but is missing permissions.',
+                    suggestion: 'The API call was rejected. This usually means the "Vertex AI API" is not enabled on your Google Cloud project. Please see Plan B in the instructions to fix this.'
+                };
+            }
+            return {
+                emotion: 'Error',
+                risk_level: 'Medium',
+                reason: 'Could not connect to the AI service or process the response.',
+                suggestion: `There was an issue contacting the AI. The error was: ${error.message}`
+            };
+        }
     };
+
+    // --- UI and Control Functions (Unchanged) ---
+    const displayAnalysisResult = (result, inputText) => {
+        // The API returns the JSON as a string, so we need to parse it.
+        let parsedResult;
+        try {
+            parsedResult = JSON.parse(result);
+        } catch (e) {
+            console.error("Failed to parse AI response as JSON:", result);
+            parsedResult = {
+                emotion: "Parsing Error",
+                risk_level: "Medium",
+                reason: "The AI did not provide a valid JSON response.",
+                suggestion: "There was a technical issue formatting the AI's reply. Please try again."
+            };
+        }
+
+        const riskClass = `risk-${parsedResult.risk_level.toLowerCase()}`;
+        const riskEmojis = { "Low": "🟢", "Medium": "🟡", "High": "🔴", "Error": "⚠️" };
+        const uiText = { analysisTitle: "🧠 Analysis of Your Feelings", inputHeader: "Your Input", emotionLabel: "Emotion", riskLabel: "Risk Level", insightLabel: "Insight", suggestionLabel: "Suggestion" };
+        let suggestionHtml = parsedResult.suggestion;
+        if (parsedResult.risk_level === 'High') {
+            suggestionHtml += `<div class="inspirational-story" style="border-color: var(--risk-high-border); margin-top: 1rem;">
+                <h4>🚨 Your Safety Is Important</h4>
+                <p>It sounds like you are in significant pain. Please use the <strong>Crisis Support</strong> resources in the sidebar immediately. You deserve support.</p>
+            </div>`;
+        }
+        analysisResultContainer.innerHTML = `
+            <h3>${uiText.analysisTitle}</h3>
+            <div class="emotion-card ${riskClass}">
+                <h4>${uiText.inputHeader}</h4>
+                <p>"${inputText}"</p>
+                <div class="result-details">
+                    <div>🎭 <strong>${uiText.emotionLabel}:</strong> ${parsedResult.emotion}</div>
+                    <div>${riskEmojis[parsedResult.risk_level]} <strong>${uiText.riskLabel}:</strong> ${parsedResult.risk_level}</div>
+                </div>
+                <p class="insight">💡 <strong>${uiText.insightLabel}:</strong> ${parsedResult.reason}</p>
+                <div class="suggestion">
+                    <p>🤖 <strong>${uiText.suggestionLabel}:</strong> ${suggestionHtml}</p>
+                </div>
+            </div>`;
+    };
+
+    const triggerAnalysis = async (text) => {
+        if (!text.trim()) return;
+        analyzeBtn.disabled = true;
+        analysisResultContainer.innerHTML = `<h3>🧠 Contacting AI for helpful insights...</h3>`;
+        const llm_result = await getAiAnalysis(text, selectedRelation, currentLanguage);
+        displayAnalysisResult(llm_result, text);
+        analyzeBtn.disabled = false;
+    };
+    
+    const init = () => {
+        if (apiKey && apiKey !== "PASTE_YOUR_GOOGLE_AI_API_KEY_HERE") {
+            backendStatus.innerHTML = '✅ AI: Connected';
+            backendStatus.classList.replace('status-warning', 'status-online');
+        } else {
+            backendStatus.innerHTML = '❌ AI: API Key Not Found!';
+            backendStatus.classList.replace('status-online', 'status-warning');
+        }
+        toggleRelationBtn.addEventListener('click', () => { relationSelectContainer.style.display = relationSelectContainer.style.display === 'block' ? 'none' : 'block'; });
+        relationSelect.addEventListener('change', (e) => { selectedRelation = e.target.value; });
+        analyzeBtn.addEventListener('click', () => triggerAnalysis(userInput.value));
+        inputMethodSelector.addEventListener('change', (e) => { textControls.style.display = e.target.value === 'text' ? 'block' : 'none'; voiceControls.style.display = e.target.value === 'voice' ? 'block' : 'none'; if (isRecording && e.target.value === 'text') { recognition.stop(); } });
+        languageSelect.addEventListener('change', (e) => { currentLanguage = e.target.value; if (recognition) { recognition.lang = currentLanguage; } });
+        if (SpeechRecognition) {
+            recognition = new SpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = currentLanguage;
+            recordBtn.addEventListener('click', () => { if (isRecording) { recognition.stop(); } else { userInput.value = ''; recognition.start(); } });
+            recognition.onstart = () => { isRecording = true; recordBtn.textContent = '🛑 Stop Recording'; recordBtn.classList.add('recording'); voiceStatus.textContent = 'Listening...'; };
+            recognition.onend = () => { isRecording = false; recordBtn.textContent = '🎙 Start Recording'; recordBtn.classList.remove('recording'); voiceStatus.textContent = 'Click to start speaking.'; if (userInput.value.trim()) { triggerAnalysis(userInput.value); } };
+            recognition.onerror = (event) => { console.error('Speech Recognition Error:', event.error); voiceStatus.textContent = `Error: ${event.error}`; isRecording = false; recordBtn.textContent = '🎙 Start Recording'; recordBtn.classList.remove('recording'); };
+            recognition.onresult = (event) => { let finalTranscript = ''; for (let i = event.resultIndex; i < event.results.length; ++i) { finalTranscript += event.results[i][0].transcript; } userInput.value = finalTranscript; };
+        } else {
+            document.querySelector('label:has(input[value="voice"])').style.display = 'none';
+            voiceControls.style.display = 'none';
+            languageSelect.parentElement.style.display = 'none';
+        }
+    };
+    init();
+};
+
 
     // --- QUIZ MODULE ---
     const quizModule = () => {
@@ -128,7 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let comfortItems = [];
         let mediaRecorder;
         let audioChunks = [];
-        const shredSound = new Audio("data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4LjQ1LjEwMAAAAAAAAAAAAAAA//tAwAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAAEAAABIwESJgAAAAAAAAAAAAAAcGF2YwAAAAgAAAAAAFACgAAA/+kQAgwAAGkHGFxRIgBAgQIAwiQoAJIAaQdY3EcSAgBAgQIAMhTHYBYAiQdYnEcSAgBAgQIAMhTHYBYAiQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdY3EcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdY-");
+        const shredSound = new Audio("data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4LjQ1LjEwMAAAAAAAAAAAAAAA//tAwAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAAEAAABIwESJgAAAAAAAAAAAAAAcGF2YwAAAAgAAAAAAFACgAAA/+kQAgwAAGkHGFxRIgBAgQIAwiQoAJIAaQdY3EcSAgBAgQIAMhTHYBYAiQdYnEcSAgBAgQIAMhTHYBYAiQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdY3EcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdY-");
         
         const loadItems = () => { comfortItems = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); };
         const saveItems = () => { localStorage.setItem(STORAGE_KEY, JSON.stringify(comfortItems)); };
@@ -383,7 +518,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!container || !resetBtn) return { activate: () => {}, deactivate: () => {} };
         const bubbleCount = 100;
         let popSound;
-        const createPopSound = () => { const popSoundBase64 = "data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4LjMyLjEwNAAAAAAAAAAAAAAA//tAwAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAAEAAABIwESJgAAAAAAAAAAAAAAcGF2YwAAAAgAAAAAAFACgAAA/+kQAgwAAGkHGFxRIgBAgQIAwiQoAJIAaQdY3EcSAgBAgQIAMhTHYBYAiQdYnEcSAgBAgQIAMhTHYBYAiQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdY3EcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdY-"; popSound = new Audio(popSoundBase64); popSound.preload = "auto"; };
+        const createPopSound = () => { const popSoundBase64 = "data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4LjMyLjEwNAAAAAAAAAAAAAAA//tAwAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAAEAAABIwESJgAAAAAAAAAAAAAAcGF2YwAAAAgAAAAAAFACgAAA/+kQAgwAAGkHGFxRIgBAgQIAwiQoAJIAaQdY3EcSAgBAgQIAMhTHYBYAiQdYnEcSAgBAgQIAMhTHYBYAiQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdY3EcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdYnEcSAgBAgQIAMhTHYBYBCQdY-"; popSound = new Audio(popSoundBase64); popSound.preload = "auto"; };
         const generateBubbles = () => { container.innerHTML = ''; for (let i = 0; i < bubbleCount; i++) { const bubble = document.createElement('div'); bubble.classList.add('bubble'); container.appendChild(bubble); } };
         const handlePop = (e) => { if (e.target.classList.contains('bubble') && !e.target.classList.contains('popped')) { e.target.classList.add('popped'); if (popSound) { popSound.currentTime = 0; popSound.play(); } } };
         const activate = () => { generateBubbles(); createPopSound(); container.addEventListener('click', handlePop); resetBtn.addEventListener('click', generateBubbles); };
