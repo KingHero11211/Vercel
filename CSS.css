@@ -40,10 +40,10 @@ body { margin: 0; font-family: 'Poppins', sans-serif; background-color: var(--bg
 .sidebar ul { list-style-type: none; padding-left: 0; font-size: 0.9rem; line-height: 1.6; }
 .main-content { 
     flex-grow: 1; 
-    padding: 0;  /* Remove padding */
-    display: flex;  /* Make it a flex container */
-    flex-direction: column;  /* Stack content vertically */
-    min-height: 100vh;  /* Ensure it takes full viewport height */
+    padding: 0; 
+    display: flex; 
+    flex-direction: column;  
+    min-height: 100vh; 
 }
 .main-content > *:not(.main-footer-bottom) {
     padding-left: 2rem;
@@ -144,13 +144,13 @@ textarea { width: 100%; padding: 1rem; border-radius: 8px; border: 1px solid var
 .main-footer-bottom {
     text-align: center;
     color: #666;
-    padding: 1rem 2rem;  /* Add horizontal padding to match content */
-    margin-top: auto;   /* This pushes the footer to the bottom */
+    padding: 1rem 2rem;  
+    margin-top: auto;   
     border-top: 1px solid var(--border-color);
     width: 100%;
-    box-sizing: border-box;  /* Include padding in width calculation */
-    background-color: var(--bg-color);  /* Add background color for consistency */
-    flex-shrink: 0;  /* Prevent footer from shrinking */
+    box-sizing: border-box;  
+    background-color: var(--bg-color); 
+    flex-shrink: 0;  
 }
 .games-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 2rem; }
 .game-card { background: var(--card-bg); padding: 2rem; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); text-align: center; }
@@ -185,7 +185,7 @@ textarea { width: 100%; padding: 1rem; border-radius: 8px; border: 1px solid var
     margin: 0 0 1rem 0;
     color: var(--text-secondary);
     font-size: 0.95rem;
-    flex-grow: 1; /* Pushes the list to the bottom if cards have different text lengths */
+    flex-grow: 1; 
 }
 
 .resource-card ul {
@@ -199,7 +199,7 @@ textarea { width: 100%; padding: 1rem; border-radius: 8px; border: 1px solid var
 }
 
 .resource-card a {
-    color: #764ba2; /* Pulls from your gradient */
+    color: #764ba2; 
     text-decoration: none;
     font-weight: 600;
     transition: color 0.2s ease;
@@ -211,7 +211,7 @@ textarea { width: 100%; padding: 1rem; border-radius: 8px; border: 1px solid var
 }
 
 .resource-card a:hover {
-    color: #667eea; /* The other color from your gradient */
+    color: #667eea; 
 }
 
 .resource-card a:hover::before {
@@ -276,10 +276,10 @@ textarea { width: 100%; padding: 1rem; border-radius: 8px; border: 1px solid var
 .kindness-cache-btn.secondary:hover { background-color: #cbd5e1; }
 .mood-button.active-mood { border: 2px solid #667eea; transform: translateY(-2px) scale(1.05); box-shadow: 0 4px 10px rgba(0,0,0,0.1); background-color: var(--pixel-bg-color-light); background-image: linear-gradient(45deg, var(--pixel-bg-color-dark) 25%, transparent 25%), linear-gradient(-45deg, var(--pixel-bg-color-dark) 25%, transparent 25%), linear-gradient(45deg, transparent 75%, var(--pixel-bg-color-dark) 75%), linear-gradient(-45deg, transparent 75%, var(--pixel-bg-color-dark) 75%); background-size: 10px 10px; background-position: 0 0, 0 5px, 5px -5px, -5px 0px; image-rendering: -moz-crisp-edges; image-rendering: -webkit-crisp-edges; image-rendering: pixelated; image-rendering: crisp-edges; }
 
-/* --- START: COMFORT BOX NEW FEATURES --- */
+
 #page-comfort-box .comfort-box-container { 
     max-width: 800px; 
-    margin: 0 auto;  /* Remove top margin since page already has padding */
+    margin: 0 auto;  
     background: white; 
     border-radius: 16px; 
     padding: 2.5rem; 
@@ -312,7 +312,7 @@ textarea { width: 100%; padding: 1rem; border-radius: 8px; border: 1px solid var
 .delete-item-btn { position: absolute; top: 10px; right: 10px; background: transparent; border: none; font-size: 1.2rem; color: #aaa; cursor: pointer; transition: color 0.2s; }
 .delete-item-btn:hover { color: var(--record-red); }
 
-/* Thought-Shredder Styles */
+
 .shredder-ui-container { position: relative; }
 #shredder-animation-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; border-radius: 8px; }
 .shred-strip { position: absolute; top: 0; height: 100%; background-color: #ffffff; border: 1px solid #ccc; animation-fill-mode: forwards; animation-duration: 1.5s; animation-timing-function: cubic-bezier(0.6, 0.04, 0.98, 0.335); }
@@ -320,31 +320,26 @@ textarea { width: 100%; padding: 1rem; border-radius: 8px; border: 1px solid var
   to { transform: translateY(200px) rotateZ(15deg); opacity: 0; }
 }
 
-/* Affirmation Recorder Styles */
+
 #affirmation-status { text-align: center; color: var(--text-secondary); margin-top: 0.5rem; font-size: 0.9rem; min-height: 1.2em; }
-/* --- END: COMFORT BOX NEW FEATURES --- */
 
-/* --- START: COMFORT BOX BUTTON FIXES --- */
-
-/* Base style for the 'Record a Message' button */
 #page-comfort-box .comfort-box-btn.record-btn {
-    display: inline-flex;       /* Use flexbox for alignment */
-    align-items: center;        /* Vertically center content */
-    justify-content: center;    /* Horizontally center content */
-    gap: 0.75rem;               /* Space between icon and text */
+    display: inline-flex;       
+    align-items: center;       
+    justify-content: center;    
+    gap: 0.75rem;               
 }
 
-/* Create the red dot icon */
+
 #page-comfort-box .comfort-box-btn.record-btn::before {
-    content: '';                /* Required for pseudo-elements */
+    content: '';               
     display: block;
-    width: 10px;                /* Icon size */
-    height: 10px;               /* Icon size */
-    background-color: #e53e3e;  /* Icon color (matches shred button) */
-    border-radius: 50%;         /* Makes it a circle */
-}
+    width: 10px;               
+    height: 10px;               
+    background-color: #e53e3e;  
+    border-radius: 50%;         
 
-/* When recording, change the icon color to match the button's animation */
+
 #page-comfort-box .comfort-box-btn.record-btn.recording::before {
     background-color: white;
 }
