@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vercel - Mental Health Support</title>
+    <link rel="stylesheet" href="CSS.css">
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <header class="sidebar-header">
+                <img src="/assets/images/dashboard.png" alt="logo" class="sidebar-logo">
+                <h2>Dashboard</h2>
+            </header>
+            
+            <div class="sidebar-content">
+                <h4><img src="/assets/images/task.jpg" class="icon"> Daily Tasks</h4>
+                <div id="daily-task-card" class="metric-interactive">
+                    <span>Today's Task</span>
+                    <strong id="sidebar-task-text">Loading...</strong>
+                </div>
+                <div id="happiness-graph-card" class="metric-interactive">
+                    <span>Happiness Graph</span>
+                    <strong id="sidebar-happiness-score">0/365</strong>
+                </div>
+            </div>
+
+            <div class="sidebar-content">
+                <h4><img src="/assets/images/navigation.jpg" class="icon"> Navigation</h4>
+                <div id="backend-status" class="status-online">✅ AI: Initializing...</div>
+                <select id="page-select">
+                    <option value="analysis">🗣 Express Yourself</option>
+                    <option value="quiz">📝 Mental Health Quiz</option>
+                    <option value="comfort-box">🧸 My Comfort Box</option>
+                    <option value="music">🎵 Calming Music</option> 
+                    <option value="games">🎮 Comfort Games</option>
+                    <option value="resources">📚 Resources</option>
+                </select>
+            </div>
+
+            <div class="sidebar-content">
+                <h4><img src="/assets/images/crisis.jpeg" class="icon"> Crisis Support</h4>
+                <p><strong>Immediate Help:</strong></p>
+                <ul>
+                    <li>🇺🇸 988 (Suicide & Crisis Lifeline)</li>
+                    <li>🇮🇳 +91-9152987821 (AASRA)</li>
+                    <li>🌍 <a href="https://www.crisistextline.org/" target="_blank">Crisis Text Line</a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="main-header">
+                <h1>🧠 Vercel</h1>
+                <p>AI-powered early mental health detection with personalized support</p>
+            </header>
+
+            <!-- Page: Express Yourself (formerly Emotion Analysis) -->
+            <div id="page-analysis" class="page active">
+                <div class="content-grid">
+                    <section class="form-section">
+                        <h3>🗣 Express Yourself</h3>
+                        <p class="input-label">Write or speak about what's on your mind. Let it all out.</p>
+                        <div class="radio-group" id="input-method-selector">
+                            <label><input type="radio" name="input-method" value="text" checked> ✍ Text Entry</label>
+                            <label><input type="radio" name="input-method" value="voice"> 🎤 Voice Note</label>
+                        </div>
+                        
+                        <div id="language-select-container" style="margin-bottom: 1rem;">
+                            <label for="language-select" class="input-label">Select Your Language:</label>
+                            <select id="language-select">
+                                <option value="en-US">🇺🇸 English</option>
+                                <option value="es-ES">🇪🇸 Spanish</option>
+                                <option value="hi-IN">🇮🇳 Hindi</option>
+                                <option value="ur-PK">🇵🇰 Urdu</option>
+                            </select>
+                        </div>
+
+                        <textarea id="user-input" rows="6" placeholder="Type a journal entry, or click 'Voice Note' to speak..."></textarea>
+                        
+                        <div id="text-controls">
+                           <div class="relation-mode-section">
+                             <button id="toggle-relation-mode" class="button-secondary">🧑‍🤝‍🧑 How should I reply?</button>
+                             <div id="relation-select-container" style="display: none; margin-top: 0.5rem; margin-bottom: 1rem;">
+                               <label for="relation-select" class="input-label">Respond as a:</label>
+                               <select id="relation-select">
+                                 <option value="">Default AI</option>
+                                 <option value="father">👨 Father</option>
+                                 <option value="mother">👩 Mother</option>
+                                 <option value="sister">👧 Sister</option>
+                                 <option value="brother">👦 Brother</option>
+                                 <option value="girlfriend">💖 Girlfriend</option>
+                                 <option value="boyfriend">💘 Boyfriend</option>
+                                 <option value="best_friend">🤗 Best Friend</option>
+                                 <option value="teacher">🎓 Teacher</option>
+                                 <option value="therapist">🩺 Therapist</option>
+                                 <option value="stranger">🕵 Stranger</option>
+                               </select>
+                             </div>
+                           </div>
+                           <button id="analyze-btn" class="button-primary">🔍 Analyze My Feelings</button>
+                        </div>
+
+                        <div id="voice-controls" style="display: none;">
+                            <button id="record-btn" class="button-record">🎙 Start Recording</button>
+                            <p id="voice-status" class="voice-status-text">Click the button to start speaking.</p>
+                        </div>
+                        
+                        <div id="analysis-result-container"></div>
+                    </section>
+                    <aside class="visuals-section">
+                        <section class="stories-feed-section">
+                            <h3>💖 Community Stories</h3>
+                            <p class="input-label">Read short, positive stories from others. You are not alone.</p>
+                            <div id="stories-list-container"></div>
+                            <button id="share-story-toggle-btn" class="button-secondary">Share Your Inspiring Story</button>
+                            <div id="story-form-container" style="display: none;">
+                                <h4>Share Your Story Anonymously</h4>
+                                <input type="text" id="story-title-input" placeholder="A hopeful title..." required>
+                                <textarea id="story-content-input" rows="4" placeholder="Share a short, positive story..."></textarea>
+                                <button id="submit-story-btn" class="button-primary">Share Anonymously</button>
+                            </div>
+                        </section>
+                        <h3>⚡ Quick Mood Check</h3>
+                        <p class="input-label">Click how you're feeling right now:</p>
+                        <div class="mood-grid">
+                            <button class="mood-button" data-mood="Happy">😊 Happy</button>
+                            <button class="mood-button" data-mood="Sad">😔 Sad</button>
+                            <button class="mood-button" data-mood="Anxious">😰 Anxious</button>
+                            <button class="mood-button" data-mood="Tired">😴 Tired</button>
+                        </div>
+                        <div id="mood-log-confirm" class="confirmation-message"></div>
+                    </aside>
+                </div>
+            </div>
+            
+            <div id="page-quiz" class="page">
+                <div class="quiz-container">
+                    <h2>📝 Mental Health & Well-being Quiz</h2>
+                    <p class="input-label">Over the last 2 weeks, how often have you been bothered by any of the following problems?
+                        <br><small>This is a supportive tool, not a medical diagnosis.</small>
+                    </p>
+                    <form id="quiz-form"></form>
+                    <div id="quiz-result-container"></div>
+                </div>
+            </div>
+          
+            <div id="page-music" class="page">
+                <h2>🎵 Calming Music</h2>
+                <p class="input-label" style="text-align: center; max-width: 800px; margin: 0 auto 2rem auto;">
+                    Select a track to play. The music will help you relax, focus, or find a moment of peace.
+                </p>
+                <div id="music-player-grid" class="music-grid">
+                    <!-- Music cards will be generated here by JavaScript -->
+                </div>
+            </div>
+
+            <div id="page-games" class="page">
+                <div class="games-grid">
+                    <div class="game-card">
+                        <h3>🧘 Zen Garden</h3>
+                        <p class="input-label">Create calm by mindfully raking sand. There are no goals. Just the quiet focus of creation.</p>
+                        <canvas id="zenGardenCanvas" width="400" height="400"></canvas>
+                        <div class="controls">
+                            <button id="zen-clear-btn">Clear Garden</button>
+                            <button id="zen-color-btn">Change Sand</button>
+                        </div>
+                    </div>
+                    <div class="game-card">
+                        <h3>💧 Bubble Pop</h3>
+                        <p class="input-label">A simple, satisfying way to relieve stress. Click or tap the bubbles to pop them.</p>
+                        <div id="bubble-wrap-container"></div>
+                        <div class="controls">
+                            <button id="bubble-reset-btn">Reset Bubbles</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="page-resources" class="page">
+                <h2>📚 Resources & Learning</h2>
+                <p class="input-label" style="text-align: center; max-width: 800px; margin: 0 auto 2rem auto;">
+                    Taking the time to learn is a powerful step in your mental wellness journey.
+                    This collection of resources is a starting point, not a substitute for professional advice.
+                </p>
+
+                <div class="resources-grid">
+                    <!-- Card 1: Understanding Anxiety -->
+                    <div class="resource-card">
+                        <h4>🧠 Understanding Anxiety</h4>
+                        <p>Learn more about what anxiety is, its symptoms, and different types from trusted sources.</p>
+                        <ul>
+                            <li><a href="https://www.nimh.nih.gov/health/topics/anxiety-disorders" target="_blank" rel="noopener noreferrer">NIMH - Anxiety Disorders</a></li>
+                            <li><a href="https://adaa.org/understanding-anxiety" target="_blank" rel="noopener noreferrer">ADAA - Understanding Anxiety</a></li>
+                            <li><a href="https://www.mind.org.uk/information-support/types-of-mental-health-problems/anxiety-and-panic-attacks/" target="_blank" rel="noopener noreferrer">Mind UK - Anxiety & Panic Attacks</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Card 2: Understanding Depression -->
+                    <div class="resource-card">
+                        <h4>🌧 Understanding Depression</h4>
+                        <p>Information on the signs of depression and the pathways to feeling better.</p>
+                        <ul>
+                            <li><a href="https://www.nimh.nih.gov/health/topics/depression" target="_blank" rel="noopener noreferrer">NIMH - Depression</a></li>
+                            <li><a href="https://adaa.org/understanding-anxiety/depression" target="_blank" rel="noopener noreferrer">ADAA - Depression Information</a></li>
+                            <li><a href="https://www.who.int/news-room/fact-sheets/detail/depression" target="_blank" rel="noopener noreferrer">WHO - Fact Sheet on Depression</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Card 3: Mindfulness & Meditation -->
+                    <div class="resource-card">
+                        <h4>🧘 Mindfulness & Meditation</h4>
+                        <p>Tools and apps to help you practice mindfulness, which can reduce stress and improve focus.</p>
+                        <ul>
+                            <li><a href="https://www.headspace.com/" target="_blank" rel="noopener noreferrer">Headspace App</a></li>
+                            <li><a href="https://www.calm.com/" target="_blank" rel="noopener noreferrer">Calm App</a></li>
+                            <li><a href="https://palousemindfulness.com/" target="_blank" rel="noopener noreferrer">Free Online MBSR Course</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Card 4: CBT Basics -->
+                    <div class="resource-card">
+                        <h4>🧩 Cognitive Behavioral Therapy (CBT)</h4>
+                        <p>Learn the basics of CBT, a type of therapy that helps you reframe negative thought patterns.</p>
+                        <ul>
+                            <li><a href="https://www.apa.org/ptsd-guideline/patients-and-families/cognitive-behavioral" target="_blank" rel="noopener noreferrer">APA - What is CBT?</a></li>
+                            <li><a href="https://www.mind.org.uk/information-support/drugs-and-treatments/talking-therapy-and-counselling/cognitive-behavioural-therapy-cbt/" target="_blank" rel="noopener noreferrer">Mind UK - About CBT</a></li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Card 5: Finding a Therapist -->
+                    <div class="resource-card">
+                        <h4>🤝 Finding Professional Support</h4>
+                        <p>Ready to talk to someone? These directories can help you find a qualified therapist near you.</p>
+                        <ul>
+                            <li><a href="https://www.psychologytoday.com/us/therapists" target="_blank" rel="noopener noreferrer">Psychology Today Directory</a></li>
+                            <li><a href="https://therapyforblackgirls.com/therapist-directory/" target="_blank" rel="noopener noreferrer">Therapy for Black Girls Directory</a></li>
+                             <li><a href="https://www.goodtherapy.org/" target="_blank" rel="noopener noreferrer">GoodTherapy Directory</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Card 6: Reading & Podcasts -->
+                    <div class="resource-card">
+                        <h4>🎧 Listen & Read</h4>
+                        <p>Engaging podcasts and articles that discuss mental health in an open and helpful way.</p>
+                        <ul>
+                            <li><a href="https://open.spotify.com/show/06fA2O1G02aC4a5vG1S2sA" target="_blank" rel="noopener noreferrer">The Happiness Lab (Podcast)</a></li>
+                            <li><a href="https://brenebrown.com/podcast/unlocking-us/" target="_blank" rel="noopener noreferrer">Unlocking Us with Brené Brown</a></li>
+                            <li><a href="https://www.verywellmind.com/" target="_blank" rel="noopener noreferrer">Verywell Mind (Articles)</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page: Comfort Box -->
+            <div id="page-comfort-box" class="page">
+                <div class="comfort-box-container">
+                    <h1>🧸 My Comfort Box</h1>
+                    <p class="input-label" style="text-align: center; max-width: 700px; margin: 0 auto 2.5rem auto;">
+                        Your personal toolkit for emotional first-aid. Use these interactive tools to ground yourself, or add items to your box that bring you peace.
+                    </p>
+
+                    <!-- START: THOUGHT SHREDDER -->
+                    <div class="comfort-box-section" id="thought-shredder-section">
+                        <h3>🗑️ The Thought-Shredder</h3>
+                        <p>Got a negative or intrusive thought? Type it here, let it go, and watch it get shredded. A digital way to practice cognitive defusion.</p>
+                        <div class="shredder-ui-container">
+                            <textarea id="shredder-input" rows="3" placeholder="e.g., I'm not good enough..."></textarea>
+                            <div id="shredder-animation-container"></div>
+                        </div>
+                        <button id="shred-btn" class="comfort-box-btn shred-btn">Shred This Thought</button>
+                    </div>
+                    <!-- END: THOUGHT SHREDDER -->
+
+                    <!-- START: VOICE AFFIRMATION RECORDER -->
+                    <div class="comfort-box-section" id="voice-affirmation-section">
+                        <h3>🎙️ Voice Affirmations</h3>
+                        <p>Record a kind message for your future self. When you're feeling down, hearing your own calm voice can be a powerful reminder of your strength.</p>
+                        <div id="affirmation-recorder-controls">
+                            <!-- Note: The emoji is removed from the button text -->
+                            <button id="affirmation-record-btn" class="comfort-box-btn record-btn">Record a Message</button>
+                            <button id="affirmation-stop-btn" class="comfort-box-btn stop-btn" style="display: none;">■ Stop Recording</button>
+                            <p id="affirmation-status">Click record to start. You can save it to your box below.</p>
+                        </div>
+                    </div>
+                    <!-- END: VOICE AFFIRMATION RECORDER -->
+
+                    <!-- Original Add Item Form -->
+                    <div class="add-item-form comfort-box-section">
+                        <h3>✨ Add an Item to Your Box</h3>
+                        <select id="itemTypeSelect">
+                            <option value="Quote">Quote</option>
+                            <option value="Memory">Memory</option>
+                            <option value="Music Link">Music Link</option>
+                            <option value="Image URL">Image URL</option>
+                            <option value="Note to Self">Note to Self</option>
+                        </select>
+                        <input type="text" id="itemContentInput" placeholder="Enter something comforting...">
+                        <button id="addItemBtn" class="comfort-box-btn">Add to Box</button>
+                    </div>
+
+                    <!-- Display Area for ALL comfort items -->
+                    <div class="items-display" id="itemListContainer">
+                        <!-- Comfort items will be rendered here by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <footer class="main-footer-bottom">
+                <p>🧠 Vercel • AI-Powered Mental Health Support • Made with ❤ for better mental wellness</p>
+                <p><small>⚠ This tool is for supportive purposes only and does not replace professional medical advice.</small></p>
+            </footer>
+        </main>
+    </div>
+
+    <!-- Modals are outside the main content flow, which is correct -->
+    <div id="task-modal" class="modal"><div class="modal-content"><span class="close-btn">×</span><h2>Your Wellness Journey</h2><section class="today-task-section"><h3>Today, <span id="today-date"></span></h3><div class="task-item" id="today-task-display"><label><input type="checkbox" id="today-task-checkbox"><span id="today-task-text">Choose a task!</span></label></div><div id="task-completion-message" class="confirmation-message" style="min-height: 1.2em;"></div></section><section class="task-dropdown-section"><h4>Select or Create Today's Task</h4><input list="task-suggestions" id="task-input" placeholder="e.g., Take a 10-minute walk"><datalist id="task-suggestions"></datalist><button id="save-task-btn" class="button-secondary" style="width: auto; margin-top: 10px; padding: 0.5rem 1rem;">Set Task</button></section><section class="task-planner-section"><h3>Plan Your Week</h3><div id="weekly-planner-container"></div></section></div></div>
+    <div id="graph-modal" class="modal"><div class="modal-content large"><span class="close-btn">×</span><h2>Your Happiness Graph for <span id="graph-year"></span></h2><div class="graph-header"><h3 id="happiness-score-details">Happiness Score: 0/365</h3></div><div class="graph-container"><div class="graph-months"></div><div class="graph-days"></div><div class="graph-grid"></div></div><div class="graph-legend"><span>Less</span><div class="legend-box level-0"></div><div class="legend-box level-1"></div><span>More</span></div></div></div>
+    <div id="kindness-cache-container"><div id="kindness-cache-box"><div id="gift-box-closed"><svg id="gift-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M13 1.07044C12.673 1.02403 12.3361 1 12 1C11.6639 1 11.327 1.02403 11 1.07044V7H13V1.07044ZM9 1.29995C5.60252 2.03964 3 5.21557 3 9V12H9V1.29995ZM15 1.29995V12H21V9C21 5.21557 18.3975 2.03964 15 1.29995ZM2 14V20C2 21.1046 2.89543 22 4 22H20C21.1046 22 22 21.1046 22 20V14H2ZM11 14V22H4C3.44772 22 3 21.5523 3 21V14H11ZM13 14H21V21C21 21.5523 20.5523 22 20 22H13V14Z"></path></svg><p>A little something for you...</p></div><div id="compliment-reveal"><h4>Just a little reminder...</h4><p id="compliment-text">You're doing great!</p><div class="kindness-buttons"><button id="new-compliment-btn" class="kindness-cache-btn">Another One!</button><button id="kindness-cache-close-btn" class="kindness-cache-btn secondary">Got it, thanks!</button></div></div></div></div>
+
+    <script src="config.js"></script>
+    <script src="JAVA.js"></script>
+</body>
+</html>
